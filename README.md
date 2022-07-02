@@ -80,6 +80,10 @@ Contains the common widgets that are shared across multiple screens.
 
 This is the starting point of the application. All the application level configurations are defined in this file i.e, theme, routes, title, orientation etc.
 
+### CI/CD Tool
+
+This project use CircleCI.
+
 For help getting started with Flutter, view
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
