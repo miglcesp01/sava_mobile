@@ -31,7 +31,6 @@ void main() {
 
     expect(find.byIcon(Icons.search), findsOneWidget);
     expect(find.text('Ingrese su código'), findsOneWidget);
-    expect(find.text('Mensajería'), findsOneWidget);
     expect(find.text('Historial'), findsOneWidget);
     expect(find.byType(SavaPackageWidget), findsWidgets);
   });
@@ -46,7 +45,6 @@ void main() {
 
     expect(find.byIcon(Icons.search), findsOneWidget);
     expect(find.text('Ingrese su código'), findsOneWidget);
-    expect(find.text('Mensajería'), findsOneWidget);
     expect(find.text('Historial'), findsOneWidget);
     expect(find.byType(SavaPackageWidget), findsWidgets);
   });
@@ -61,7 +59,6 @@ void main() {
 
     expect(find.byIcon(Icons.search), findsOneWidget);
     expect(find.text('Ingrese su código'), findsOneWidget);
-    expect(find.text('Mensajería'), findsOneWidget);
     expect(find.text('Historial'), findsOneWidget);
     expect(find.byType(SavaPackageWidget), findsWidgets);
   });

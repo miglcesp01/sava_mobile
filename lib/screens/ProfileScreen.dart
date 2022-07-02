@@ -26,7 +26,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   ];
 
   void addRow() {
-    if (rows.isEmpty) {
+    if (rows.isEmpty || (rows.last.medio != "" && rows.last.valor != "")) {
       rows.add(MedioContacto(medio: "", valor: ""));
     }
     setState(() {});
