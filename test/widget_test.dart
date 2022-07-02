@@ -5,26 +5,64 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+// ignore_for_file: import_of_legacy_library_into_null_safe
+
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http_mock_adapter/http_mock_adapter.dart';
 
 import 'package:sava_mobile/main.dart';
+import 'package:sava_mobile/screens/screens.dart';
+import 'package:sava_mobile/widgets/widgets.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+  testWidgets("Login button trigger home screen", (WidgetTester tester) async {
     await tester.pumpWidget(const SavaExpressApp());
-
     // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(find.text('Usuario'), findsOneWidget);
+    expect(find.text('Contraseña'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    // Tap the login button
+    await tester.tap(find.text("Iniciar Sesión"));
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.byIcon(Icons.search), findsOneWidget);
+    expect(find.text('Ingrese su código'), findsOneWidget);
+    expect(find.text('Mensajería'), findsOneWidget);
+    expect(find.text('Historial'), findsOneWidget);
+    expect(find.byType(SavaPackageWidget), findsWidgets);
+  });
+
+  testWidgets("Home Screen trigger Historial Screen",
+      (WidgetTester tester) async {
+    await tester.pumpWidget(const SavaExpressApp());
+    await tester.tap(find.text("Iniciar Sesión"));
+    await tester.pump();
+    await tester.tap(find.text("Historial"));
+    await tester.pump();
+
+    expect(find.byIcon(Icons.search), findsOneWidget);
+    expect(find.text('Ingrese su código'), findsOneWidget);
+    expect(find.text('Mensajería'), findsOneWidget);
+    expect(find.text('Historial'), findsOneWidget);
+    expect(find.byType(SavaPackageWidget), findsWidgets);
+  });
+
+  testWidgets("Home Screen trigger Historial Screen",
+      (WidgetTester tester) async {
+    await tester.pumpWidget(const SavaExpressApp());
+    await tester.tap(find.text("Iniciar Sesión"));
+    await tester.pump();
+    await tester.tap(find.text("Historial"));
+    await tester.pump();
+
+    expect(find.byIcon(Icons.search), findsOneWidget);
+    expect(find.text('Ingrese su código'), findsOneWidget);
+    expect(find.text('Mensajería'), findsOneWidget);
+    expect(find.text('Historial'), findsOneWidget);
+    expect(find.byType(SavaPackageWidget), findsWidgets);
   });
 }
