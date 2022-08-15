@@ -32,7 +32,7 @@ void main() {
     expect(find.byIcon(Icons.search), findsOneWidget);
     expect(find.text('Ingrese su código'), findsOneWidget);
     expect(find.text('Historial'), findsOneWidget);
-    expect(find.byType(SavaPackageWidget), findsWidgets);
+    expect(find.byType(WarehousePackageWidget), findsWidgets);
   });
 
   testWidgets("Home Screen trigger Historial Screen",
@@ -46,7 +46,7 @@ void main() {
     expect(find.byIcon(Icons.search), findsOneWidget);
     expect(find.text('Ingrese su código'), findsOneWidget);
     expect(find.text('Historial'), findsOneWidget);
-    expect(find.byType(SavaPackageWidget), findsWidgets);
+    expect(find.byType(WarehousePackageWidget), findsWidgets);
   });
 
   testWidgets("Home Screen trigger Historial Screen",
@@ -60,6 +60,6 @@ void main() {
     expect(find.byIcon(Icons.search), findsOneWidget);
     expect(find.text('Ingrese su código'), findsOneWidget);
     expect(find.text('Historial'), findsOneWidget);
-    expect(find.byType(SavaPackageWidget), findsWidgets);
+    expect(find.byType(WarehousePackageWidget), findsWidgets);
   });
 }

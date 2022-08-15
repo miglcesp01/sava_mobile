@@ -1,8 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../widgets/sava_package_widget.dart';
+import '../../providers/warehouse_package_provider.dart';
+import '../../widgets/warehouse_package_widget.dart';
 
 class PackagesClientScreen extends StatefulWidget {
   const PackagesClientScreen({
@@ -14,17 +16,38 @@ class PackagesClientScreen extends StatefulWidget {
 }
 
 class _PackagesClientScreenState extends State<PackagesClientScreen> {
-  final packages = [];
+  dynamic packages = [];
+  dynamic packages_availables = [];
 
-  void addPackage(int newId) {
+  void addPackage(String newId) {
     setState(() {
-      packages.add("Paquete");
+      packages.add(newId);
+      print(packages);
     });
   }
 
-  void deletePackage(int newId) {
+  void deletePackage(String newId) {
     setState(() {
-      packages.removeLast();
+      packages.remove(newId);
+    });
+  }
+
+  //Shared Preferences
+  late SharedPreferences prefs;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () async {
+      prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
+      dynamic response =
+          await WarehousePackageProvider.getWarehousePackages(token!);
+      packages_availables = response;
+      print(response);
+      setState(() {});
+      print(packages_availables);
+      print(token);
     });
   }
 
@@ -97,21 +120,20 @@ class _PackagesClientScreenState extends State<PackagesClientScreen> {
           style:
               TextStyle(fontSize: 30, color: Color.fromARGB(255, 22, 102, 168)),
         ),
-        SavaPackageWidget(
-          addPackage: addPackage,
-          removePackage: deletePackage,
-          needCheck: true,
-        ),
-        SavaPackageWidget(
-          addPackage: addPackage,
-          removePackage: deletePackage,
-          needCheck: true,
-        ),
-        SavaPackageWidget(
-          addPackage: addPackage,
-          removePackage: deletePackage,
-          needCheck: true,
-        ),
+        ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemCount: packages_availables.length,
+            itemBuilder: (BuildContext ctxt, int index) {
+              print(packages_availables[index]);
+              return WarehousePackageWidget(
+                tracking_number: packages_availables[index]["tracking_number"],
+                details: packages_availables[index],
+                addPackage: addPackage,
+                removePackage: deletePackage,
+                needCheck: true,
+              );
+            }),
       ]),
     );
   }

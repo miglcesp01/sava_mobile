@@ -1,6 +1,8 @@
-// ignore_for_file: unnecessary_new, unused_field, prefer_const_constructors
+// ignore_for_file: unnecessary_new, unused_field, prefer_const_constructors, always_specify_types, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:sava_mobile/providers/user_provider.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({Key? key}) : super(key: key);
@@ -16,66 +18,17 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   // our form key
   final _formKey = GlobalKey<FormState>();
   // editing Controller
-  final firstNameEditingController = new TextEditingController();
-  final secondNameEditingController = new TextEditingController();
-  final emailEditingController = new TextEditingController();
-  final passwordEditingController = new TextEditingController();
-  final confirmPasswordEditingController = new TextEditingController();
+  final TextEditingController addressEditingController =
+      new TextEditingController();
+  final TextEditingController emailEditingController =
+      new TextEditingController();
+  final TextEditingController passwordEditingController =
+      new TextEditingController();
+  final TextEditingController confirmPasswordEditingController =
+      new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    //first name field
-    final firstNameField = TextFormField(
-        autofocus: false,
-        controller: firstNameEditingController,
-        keyboardType: TextInputType.name,
-        validator: (value) {
-          RegExp regex = new RegExp(r'^.{3,}$');
-          if (value!.isEmpty) {
-            return ("El primer nombre no debe ser vacío.");
-          }
-          if (!regex.hasMatch(value)) {
-            return ("Ingrese un nombre válido(Min. 3 Caractes)");
-          }
-          return null;
-        },
-        onSaved: (value) {
-          firstNameEditingController.text = value!;
-        },
-        textInputAction: TextInputAction.next,
-        decoration: InputDecoration(
-          prefixIcon: Icon(Icons.account_circle),
-          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-          hintText: "Nombre",
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ));
-
-    //second name field
-    final secondNameField = TextFormField(
-        autofocus: false,
-        controller: secondNameEditingController,
-        keyboardType: TextInputType.name,
-        validator: (value) {
-          if (value!.isEmpty) {
-            return ("El apellido no debe ser vacío.");
-          }
-          return null;
-        },
-        onSaved: (value) {
-          secondNameEditingController.text = value!;
-        },
-        textInputAction: TextInputAction.next,
-        decoration: InputDecoration(
-          prefixIcon: Icon(Icons.account_circle),
-          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-          hintText: "Apellido",
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ));
-
     //email field
     final emailField = TextFormField(
         autofocus: false,
@@ -93,7 +46,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           return null;
         },
         onSaved: (value) {
-          firstNameEditingController.text = value!;
+          emailEditingController.text = value!;
         },
         textInputAction: TextInputAction.next,
         decoration: InputDecoration(
@@ -120,13 +73,30 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           }
         },
         onSaved: (value) {
-          firstNameEditingController.text = value!;
+          passwordEditingController.text = value!;
         },
         textInputAction: TextInputAction.next,
         decoration: InputDecoration(
           prefixIcon: Icon(Icons.vpn_key),
           contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
           hintText: "Contraseña",
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ));
+
+    // address field
+    final addressField = TextFormField(
+        autofocus: false,
+        controller: addressEditingController,
+        onSaved: (value) {
+          addressEditingController.text = value!;
+        },
+        textInputAction: TextInputAction.next,
+        decoration: InputDecoration(
+          prefixIcon: Icon(Icons.vpn_key),
+          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+          hintText: "Dirección",
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -165,7 +135,30 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       child: MaterialButton(
           padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
           minWidth: MediaQuery.of(context).size.width,
-          onPressed: () {},
+          onPressed: () async {
+            String correo = emailEditingController.text;
+            String password = passwordEditingController.text;
+            String address = addressEditingController.text;
+            String confirmPassword = confirmPasswordEditingController.text;
+
+            if (password != confirmPassword) {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text('Las contraseñas ingresadas no coinciden')));
+            } else {
+              var response =
+                  await UserProvider.createUser(address, correo, password);
+              if (response['status'] == 200) {
+                Navigator.popAndPushNamed(context, "login");
+              } else if (response['status'] == 400 ||
+                  response['status'] == 401) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Credenciales incorrectas')));
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text('Error interno del servidor')));
+              }
+            }
+          },
           child: Text(
             "Registrarse",
             textAlign: TextAlign.center,
@@ -199,11 +192,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           fit: BoxFit.contain,
                         )),
                     SizedBox(height: 45),
-                    firstNameField,
-                    SizedBox(height: 20),
-                    secondNameField,
-                    SizedBox(height: 20),
                     emailField,
+                    SizedBox(height: 20),
+                    addressField,
                     SizedBox(height: 20),
                     passwordField,
                     SizedBox(height: 20),

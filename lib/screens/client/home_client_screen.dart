@@ -1,12 +1,15 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sized_box_for_whitespace
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sized_box_for_whitespace, always_specify_types, unused_import, non_constant_identifier_names
 
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sava_mobile/models/dosage_model.dart';
+import 'package:sava_mobile/providers/warehouse_package_provider.dart';
 import 'package:sava_mobile/screens/ProfileScreen.dart';
-import 'package:sava_mobile/widgets/sava_package_widget.dart';
+import 'package:sava_mobile/screens/client/sava_packages_client_screen.dart';
+import 'package:sava_mobile/widgets/warehouse_package_widget.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../utils/create_cell.dart';
 import '../screens.dart';
@@ -24,16 +27,19 @@ class _HomeClientScreenState extends State<HomeClientScreen> {
 
   final screens = [
     PackagesClientScreen(),
-    Text("Envios"),
+    SavaPackagesClientScreen(),
     HistorialClientScreen(),
   ];
 
+  //Shared Preferences
+  late SharedPreferences prefs;
+
   @override
   void initState() {
-    // TODO: implement initState
     screens.add(ProfileScreen(
       key: _MyWidgetState,
     ));
+
     super.initState();
   }
 
@@ -70,84 +76,85 @@ class _HomeClientScreenState extends State<HomeClientScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: appBar,
-        body: screens[currentIndex],
-        bottomNavigationBar: BottomNavigationBar(
-            currentIndex: currentIndex,
-            showUnselectedLabels: true,
-            type: BottomNavigationBarType.fixed,
-            onTap: (index) async {
-              currentIndex = index;
-              setState(() {});
-            },
-            items: [
-              BottomNavigationBarItem(
-                  label: "Paquetería",
-                  icon: ImageIcon(AssetImage("assets/entrega-rapida.png"))),
-              BottomNavigationBarItem(
-                  label: "Envíos",
-                  icon: ImageIcon(AssetImage("assets/avion.png"))),
-              BottomNavigationBarItem(
-                  label: "Historial",
-                  icon: ImageIcon(AssetImage("assets/historial.png"))),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: 'Perfil',
-              )
-            ]),
-        floatingActionButton: currentIndex == 3 ? buildSpeedDial() : null);
+      appBar: appBar,
+      body: screens[currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+          currentIndex: currentIndex,
+          showUnselectedLabels: true,
+          type: BottomNavigationBarType.fixed,
+          onTap: (index) async {
+            currentIndex = index;
+            setState(() {});
+          },
+          items: [
+            BottomNavigationBarItem(
+                label: "Paquetería",
+                icon: ImageIcon(AssetImage("assets/entrega-rapida.png"))),
+            BottomNavigationBarItem(
+                label: "Envíos",
+                icon: ImageIcon(AssetImage("assets/avion.png"))),
+            BottomNavigationBarItem(
+                label: "Historial",
+                icon: ImageIcon(AssetImage("assets/historial.png"))),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Perfil',
+            )
+          ]),
+      // floatingActionButton: currentIndex == 3 ? buildSpeedDial() : null
+    );
   }
 
-  SpeedDial buildSpeedDial() {
-    return SpeedDial(
-        animatedIcon: AnimatedIcons.menu_close,
-        animatedIconTheme: IconThemeData(size: 28.0),
-        backgroundColor: Colors.orange,
-        visible: true,
-        curve: Curves.bounceInOut,
-        children: [
-          SpeedDialChild(
-            child: Icon(Icons.clear, color: Colors.white),
-            backgroundColor: Colors.blue,
-            onTap: () {
-              _MyWidgetState.currentState!.limpiarTabla();
-            },
-            label: 'Limpiar Tabla',
-            labelStyle:
-                TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
-            labelBackgroundColor: Colors.black,
-          ),
-          SpeedDialChild(
-            child: Icon(Icons.delete, color: Colors.white),
-            backgroundColor: Colors.blue,
-            onTap: () {
-              setState(() {
-                _MyWidgetState.currentState!.deleteRow();
-                // if (rows.isNotEmpty) {
-                // rows.removeLast();
-                // }
-              });
-            },
-            label: 'Eliminar Fila',
-            labelStyle:
-                TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
-            labelBackgroundColor: Colors.black,
-          ),
-          SpeedDialChild(
-            child: Icon(Icons.add, color: Colors.white),
-            backgroundColor: Colors.blue,
-            onTap: () {
-              setState(() {
-                _MyWidgetState.currentState!.addRow();
-                // rows.add(Dosage(
-                // lowerWeight: 0, higherWeight: 0, porcentageWeight: 0));
-              });
-            },
-            label: 'Agregar Fila',
-            labelStyle:
-                TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
-            labelBackgroundColor: Colors.black,
-          ),
-        ]);
-  }
+  // SpeedDial buildSpeedDial() {
+  //   return SpeedDial(
+  //       animatedIcon: AnimatedIcons.menu_close,
+  //       animatedIconTheme: IconThemeData(size: 28.0),
+  //       backgroundColor: Colors.orange,
+  //       visible: true,
+  //       curve: Curves.bounceInOut,
+  //       children: [
+  //         SpeedDialChild(
+  //           child: Icon(Icons.clear, color: Colors.white),
+  //           backgroundColor: Colors.blue,
+  //           onTap: () {
+  //             _MyWidgetState.currentState!.limpiarTabla();
+  //           },
+  //           label: 'Limpiar Tabla',
+  //           labelStyle:
+  //               TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
+  //           labelBackgroundColor: Colors.black,
+  //         ),
+  //         SpeedDialChild(
+  //           child: Icon(Icons.delete, color: Colors.white),
+  //           backgroundColor: Colors.blue,
+  //           onTap: () {
+  //             setState(() {
+  //               _MyWidgetState.currentState!.deleteRow();
+  //               // if (rows.isNotEmpty) {
+  //               // rows.removeLast();
+  //               // }
+  //             });
+  //           },
+  //           label: 'Eliminar Fila',
+  //           labelStyle:
+  //               TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
+  //           labelBackgroundColor: Colors.black,
+  //         ),
+  //         SpeedDialChild(
+  //           child: Icon(Icons.add, color: Colors.white),
+  //           backgroundColor: Colors.blue,
+  //           onTap: () {
+  //             setState(() {
+  //               _MyWidgetState.currentState!.addRow();
+  //               // rows.add(Dosage(
+  //               // lowerWeight: 0, higherWeight: 0, porcentageWeight: 0));
+  //             });
+  //           },
+  //           label: 'Agregar Fila',
+  //           labelStyle:
+  //               TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
+  //           labelBackgroundColor: Colors.black,
+  //         ),
+  //       ]);
+  // }
 }

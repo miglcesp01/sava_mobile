@@ -16,34 +16,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class ProfileScreenState extends State<ProfileScreen> {
-  late Widget mediosTable;
-
-  //DataTable columns
-  final columns = ["Medio", "Valor"];
-  //DataTable rows
-  List<MedioContacto> rows = [
-    new MedioContacto(medio: "Telefono", valor: "099999889")
-  ];
-
-  void addRow() {
-    if (rows.isEmpty || (rows.last.medio != "" && rows.last.valor != "")) {
-      rows.add(MedioContacto(medio: "", valor: ""));
-    }
-    setState(() {});
-  }
-
-  void deleteRow() {
-    if (rows.isNotEmpty) {
-      rows.removeLast();
-    }
-    setState(() {});
-  }
-
-  void limpiarTabla() {
-    rows.clear();
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -80,7 +52,7 @@ class ProfileScreenState extends State<ProfileScreen> {
               Container(
                   constraints: BoxConstraints(
                       maxWidth: MediaQuery.of(context).size.width * 0.4),
-                  child: Text('Direccion: ', style: TextStyle(fontSize: 20))),
+                  child: Text('Teléfono: ', style: TextStyle(fontSize: 20))),
               Container(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
@@ -88,89 +60,14 @@ class ProfileScreenState extends State<ProfileScreen> {
                     borderRadius: BorderRadius.all(Radius.circular(3))),
                 constraints: BoxConstraints(
                     maxWidth: MediaQuery.of(context).size.width * 0.6),
-                child: Text("Espol, Guayaquil",
+                child: Text("098987674",
                     style: TextStyle(fontSize: 20),
                     overflow: TextOverflow.ellipsis),
               )
             ]),
-            buildDataTable(),
           ],
         ),
       ),
     );
-  }
-
-  Widget buildDataTable() {
-    return DataTable(
-      columnSpacing: 60,
-      columns: getColumns(),
-      rows: getRows(),
-    );
-  }
-
-  List<DataColumn> getColumns() {
-    return columns.map((String column) {
-      return DataColumn(
-        label: Text(column),
-      );
-    }).toList();
-  }
-
-  List<DataRow> getRows() => rows.map((MedioContacto medio) {
-        final cells = [
-          medio.medio,
-          medio.valor,
-        ];
-
-        return DataRow(
-          cells: CellMedioTable.modelBuilder(cells, (index, cell) {
-            const showEditIcon = true;
-
-            return DataCell(
-              Text('$cell'),
-              showEditIcon: showEditIcon,
-              onTap: () {
-                switch (index) {
-                  case 0:
-                    editMedio(medio);
-                    break;
-                  case 1:
-                    editValue(medio);
-                    break;
-                }
-              },
-            );
-          }),
-        );
-      }).toList();
-
-  Future editMedio(MedioContacto editDosage) async {
-    var lowerWeight = await showTextDialog(
-      context,
-      title: 'Editar Medio',
-      value: editDosage.medio,
-    );
-    if (lowerWeight == '') lowerWeight = "0";
-
-    setState(() => rows = rows.map((dosage) {
-          final isEditedDosage = dosage == editDosage;
-
-          return isEditedDosage ? dosage.copy(medio: lowerWeight) : dosage;
-        }).toList());
-  }
-
-  Future editValue(MedioContacto editDosage) async {
-    var higherWeight = await showTextDialog(
-      context,
-      title: 'Editar Valor',
-      value: editDosage.valor,
-    );
-    if (higherWeight == '') higherWeight = "0";
-
-    setState(() => rows = rows.map((dosage) {
-          final isEditedDosage = dosage == editDosage;
-
-          return isEditedDosage ? dosage.copy(valor: higherWeight) : dosage;
-        }).toList());
   }
 }

@@ -1,6 +1,8 @@
-// ignore_for_file: prefer_const_constructors, unused_local_variable, unnecessary_new
+// ignore_for_file: prefer_const_constructors, unused_local_variable, unnecessary_new, always_specify_types, avoid_print, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:sava_mobile/providers/user_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -31,11 +33,6 @@ class _LoginScreenState extends State<LoginScreen> {
           if (value!.isEmpty) {
             return ("Please Enter Your Email");
           }
-          // reg expression for email validation
-          // if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
-          //     .hasMatch(value)) {
-          //   return ("Please Enter a valid email");
-          // }
           return null;
         },
         onSaved: (value) {
@@ -56,15 +53,6 @@ class _LoginScreenState extends State<LoginScreen> {
         autofocus: false,
         controller: passwordController,
         obscureText: true,
-        validator: (value) {
-          // RegExp regex = new RegExp(r'^.{6,}$');
-          // if (value!.isEmpty) {
-          //   return ("Password is required for login");
-          // }
-          // if (!regex.hasMatch(value)) {
-          //   return ("Enter Valid Password(Min. 6 Character)");
-          // }
-        },
         onSaved: (value) {
           passwordController.text = value!;
         },
@@ -85,8 +73,21 @@ class _LoginScreenState extends State<LoginScreen> {
       child: MaterialButton(
           padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
           minWidth: MediaQuery.of(context).size.width,
-          onPressed: () {
-            Navigator.popAndPushNamed(context, "home_client");
+          onPressed: () async {
+            String correo = emailController.text;
+            String password = passwordController.text;
+            var response = await UserProvider.loginUser(correo, password);
+            if (response['status'] == 200) {
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              prefs.setString("token", response['payload']['token']);
+              Navigator.popAndPushNamed(context, "home_client");
+            } else if (response['status'] == 400 || response['status'] == 401) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Credenciales incorrectas')));
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Error interno del servidor')));
+            }
           },
           child: Text(
             "Iniciar Sesión",

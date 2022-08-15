@@ -1,27 +1,33 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, must_be_immutable
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, must_be_immutable, non_constant_identifier_names
+
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
-import 'package:sava_mobile/widgets/sava_package_detail_widget.dart';
+import 'package:sava_mobile/widgets/warehouse_package_detail_widget.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
-typedef void IntCallback(int id);
+typedef void StringCallback(String val);
 
-class SavaPackageWidget extends StatefulWidget {
+class WarehousePackageWidget extends StatefulWidget {
+  final String tracking_number;
+  final dynamic details;
   bool needCheck = true;
-  final IntCallback addPackage;
-  final IntCallback removePackage;
-  SavaPackageWidget(
+  final StringCallback addPackage;
+  final StringCallback removePackage;
+  WarehousePackageWidget(
       {Key? key,
       required this.addPackage,
       required this.needCheck,
-      required this.removePackage})
+      required this.removePackage,
+      required this.tracking_number,
+      this.details})
       : super(key: key);
 
   @override
-  State<SavaPackageWidget> createState() => _SavaPackageWidgetState();
+  State<WarehousePackageWidget> createState() => _WarehousePackageWidgetState();
 }
 
-class _SavaPackageWidgetState extends State<SavaPackageWidget> {
+class _WarehousePackageWidgetState extends State<WarehousePackageWidget> {
   bool _value = false;
 
   @override
@@ -60,9 +66,11 @@ class _SavaPackageWidgetState extends State<SavaPackageWidget> {
                               value: _value,
                               onChanged: (value) {
                                 if (value!) {
-                                  widget.addPackage(3);
+                                  widget.addPackage(
+                                      widget.details['tracking_number']);
                                 } else {
-                                  widget.removePackage(3);
+                                  widget.removePackage(
+                                      widget.details['tracking_number']);
                                 }
 
                                 setState(() {
@@ -77,7 +85,7 @@ class _SavaPackageWidgetState extends State<SavaPackageWidget> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  "10203044",
+                  this.widget.tracking_number,
                   style: TextStyle(
                       fontSize: 25, color: Color.fromARGB(255, 115, 123, 130)),
                 ),
@@ -108,11 +116,11 @@ class _SavaPackageWidgetState extends State<SavaPackageWidget> {
                       color: Color.fromARGB(255, 15, 96, 162),
                       onPressed: () async {
                         await showTextDialog(context,
-                            numeroRastreo: "123123213",
-                            posicionActual: "Miami",
-                            peso: "3.5 lb",
-                            precio: "33",
-                            fecha: "18-06-2022");
+                            numeroRastreo: widget.details['tracking_number'],
+                            posicionActual: 'Bodega de Miami',
+                            peso: "${widget.details['pounds']} lb",
+                            precio: "${widget.details['price']}",
+                            fecha: widget.details['arrival_date']);
                       },
                     )
                   ],

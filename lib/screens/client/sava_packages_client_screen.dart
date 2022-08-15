@@ -4,16 +4,17 @@ import 'package:flutter/material.dart';
 
 import '../../widgets/warehouse_package_widget.dart';
 
-class HistorialClientScreen extends StatefulWidget {
-  const HistorialClientScreen({Key? key}) : super(key: key);
+class SavaPackagesClientScreen extends StatefulWidget {
+  const SavaPackagesClientScreen({Key? key}) : super(key: key);
 
   @override
-  State<HistorialClientScreen> createState() => _HistorialClientScreenState();
+  State<SavaPackagesClientScreen> createState() =>
+      _SavaPackagesClientScreenState();
 }
 
 void updateId(int newId) {}
 
-class _HistorialClientScreenState extends State<HistorialClientScreen> {
+class _SavaPackagesClientScreenState extends State<SavaPackagesClientScreen> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -56,7 +57,7 @@ class _HistorialClientScreenState extends State<HistorialClientScreen> {
               ),
             )),
         Text(
-          "Historial de Paquetes",
+          "Paquetes Sava",
           style:
               TextStyle(fontSize: 30, color: Color.fromARGB(255, 22, 102, 168)),
         ),

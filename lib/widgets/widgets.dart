@@ -1,1 +1,1 @@
-export 'package:sava_mobile/widgets/sava_package_widget.dart';
+export 'package:sava_mobile/widgets/warehouse_package_widget.dart';
