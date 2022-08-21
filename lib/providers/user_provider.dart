@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class UserProvider {
-  static final String _baseUrl = 'localhost:4000';
+  static final String _baseUrl = 'api.savaexpress.us';
 
   Future<String> _getJsonData(String segment) async {
     var url = Uri.http(_baseUrl, segment);
@@ -31,7 +31,6 @@ class UserProvider {
     final response = await http.post(url,
         headers: {'Content-Type': 'application/json'}, body: jsonString);
     final jsonDecoded = json.decode(response.body);
-    print(jsonDecoded);
     return jsonDecoded;
   }
 }

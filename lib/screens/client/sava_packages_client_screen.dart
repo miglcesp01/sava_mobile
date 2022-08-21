@@ -1,7 +1,10 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../providers/warehouse_package_provider.dart';
+import '../../widgets/sava_package_widget.dart';
 import '../../widgets/warehouse_package_widget.dart';
 
 class SavaPackagesClientScreen extends StatefulWidget {
@@ -12,9 +15,24 @@ class SavaPackagesClientScreen extends StatefulWidget {
       _SavaPackagesClientScreenState();
 }
 
-void updateId(int newId) {}
-
 class _SavaPackagesClientScreenState extends State<SavaPackagesClientScreen> {
+  dynamic packages = [];
+
+  //Shared Preferences
+  late SharedPreferences prefs;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () async {
+      prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
+      dynamic response = await WarehousePackageProvider.getSavaPackages(token!);
+      packages = response;
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -61,21 +79,13 @@ class _SavaPackagesClientScreenState extends State<SavaPackagesClientScreen> {
           style:
               TextStyle(fontSize: 30, color: Color.fromARGB(255, 22, 102, 168)),
         ),
-        // WarehousePackageWidget(
-        //   addPackage: updateId,
-        //   removePackage: (int newId) {},
-        //   needCheck: false,
-        // ),
-        // WarehousePackageWidget(
-        //   addPackage: updateId,
-        //   removePackage: (int newId) {},
-        //   needCheck: false,
-        // ),
-        // WarehousePackageWidget(
-        //   addPackage: updateId,
-        //   removePackage: (int newId) {},
-        //   needCheck: false,
-        // ),
+        ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemCount: packages.length,
+            itemBuilder: (context, index) {
+              return SavaPackageWidget(details: packages[index]);
+            })
       ]),
     );
   }

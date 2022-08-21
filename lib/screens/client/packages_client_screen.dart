@@ -103,7 +103,16 @@ class _PackagesClientScreenState extends State<PackagesClientScreen> {
                         style: ButtonStyle(
                             backgroundColor:
                                 MaterialStateProperty.all(Colors.yellow)),
-                        onPressed: () {},
+                        onPressed: () async {
+                          var response =
+                              await WarehousePackageProvider.createSavaPackages(
+                                  packages);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content:
+                                      Text('Paquete creado correctamente')));
+                          Navigator.popAndPushNamed(context, "home_client");
+                        },
                         child: Text(
                           "Enviar Paquetes (${packages.length})",
                           style: TextStyle(color: Colors.black),

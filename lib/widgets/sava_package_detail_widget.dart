@@ -10,11 +10,13 @@ Future<T?> showTextDialog<T>(
   required String peso,
   required String precio,
   required String fecha,
+  required String fecha_salida,
 }) =>
     showDialog<T>(
       context: context,
       builder: (context) => TextDialogWidget(
           images: images,
+          fecha_salida: fecha_salida,
           numeroRastreo: numeroRastreo,
           posicionActual: posicionActual,
           peso: peso,
@@ -29,6 +31,7 @@ class TextDialogWidget extends StatefulWidget {
   final String posicionActual;
   final String peso;
   final String precio;
+  final String fecha_salida;
 
   const TextDialogWidget({
     Key? key,
@@ -38,6 +41,7 @@ class TextDialogWidget extends StatefulWidget {
     required this.peso,
     required this.precio,
     required this.images,
+    required this.fecha_salida,
   }) : super(key: key);
 
   @override
@@ -58,7 +62,7 @@ class _TextDialogWidgetState extends State<TextDialogWidget> {
         content: SingleChildScrollView(
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text("Número de rastreo",
+            Text("Código Sava",
                 style: TextStyle(
                     fontSize: 25, color: Color.fromARGB(255, 15, 96, 162))),
             Text(widget.numeroRastreo,
@@ -106,6 +110,12 @@ class _TextDialogWidgetState extends State<TextDialogWidget> {
               thickness: 1,
               endIndent: 10,
             ),
+            Text("Fecha salida",
+                style: TextStyle(
+                    fontSize: 25, color: Color.fromARGB(255, 15, 96, 162))),
+            Text(widget.fecha_salida,
+                style: TextStyle(
+                    fontSize: 20, color: Color.fromARGB(255, 51, 50, 50))),
             Text("Fecha estimada de llegada",
                 style: TextStyle(
                     fontSize: 25, color: Color.fromARGB(255, 15, 96, 162))),

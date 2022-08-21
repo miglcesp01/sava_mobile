@@ -28,7 +28,6 @@ class _HomeClientScreenState extends State<HomeClientScreen> {
   final screens = [
     PackagesClientScreen(),
     SavaPackagesClientScreen(),
-    HistorialClientScreen(),
   ];
 
   //Shared Preferences
@@ -94,67 +93,10 @@ class _HomeClientScreenState extends State<HomeClientScreen> {
                 label: "Envíos",
                 icon: ImageIcon(AssetImage("assets/avion.png"))),
             BottomNavigationBarItem(
-                label: "Historial",
-                icon: ImageIcon(AssetImage("assets/historial.png"))),
-            BottomNavigationBarItem(
               icon: Icon(Icons.person),
               label: 'Perfil',
             )
           ]),
-      // floatingActionButton: currentIndex == 3 ? buildSpeedDial() : null
     );
   }
-
-  // SpeedDial buildSpeedDial() {
-  //   return SpeedDial(
-  //       animatedIcon: AnimatedIcons.menu_close,
-  //       animatedIconTheme: IconThemeData(size: 28.0),
-  //       backgroundColor: Colors.orange,
-  //       visible: true,
-  //       curve: Curves.bounceInOut,
-  //       children: [
-  //         SpeedDialChild(
-  //           child: Icon(Icons.clear, color: Colors.white),
-  //           backgroundColor: Colors.blue,
-  //           onTap: () {
-  //             _MyWidgetState.currentState!.limpiarTabla();
-  //           },
-  //           label: 'Limpiar Tabla',
-  //           labelStyle:
-  //               TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
-  //           labelBackgroundColor: Colors.black,
-  //         ),
-  //         SpeedDialChild(
-  //           child: Icon(Icons.delete, color: Colors.white),
-  //           backgroundColor: Colors.blue,
-  //           onTap: () {
-  //             setState(() {
-  //               _MyWidgetState.currentState!.deleteRow();
-  //               // if (rows.isNotEmpty) {
-  //               // rows.removeLast();
-  //               // }
-  //             });
-  //           },
-  //           label: 'Eliminar Fila',
-  //           labelStyle:
-  //               TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
-  //           labelBackgroundColor: Colors.black,
-  //         ),
-  //         SpeedDialChild(
-  //           child: Icon(Icons.add, color: Colors.white),
-  //           backgroundColor: Colors.blue,
-  //           onTap: () {
-  //             setState(() {
-  //               _MyWidgetState.currentState!.addRow();
-  //               // rows.add(Dosage(
-  //               // lowerWeight: 0, higherWeight: 0, porcentageWeight: 0));
-  //             });
-  //           },
-  //           label: 'Agregar Fila',
-  //           labelStyle:
-  //               TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
-  //           labelBackgroundColor: Colors.black,
-  //         ),
-  //       ]);
-  // }
 }

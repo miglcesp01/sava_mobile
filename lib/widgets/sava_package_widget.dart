@@ -3,31 +3,18 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
-import 'package:sava_mobile/widgets/warehouse_package_detail_widget.dart';
+import 'package:sava_mobile/widgets/sava_package_detail_widget.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
-typedef void StringCallback(String val);
-
-class WarehousePackageWidget extends StatefulWidget {
-  final String tracking_number;
+class SavaPackageWidget extends StatefulWidget {
   final dynamic details;
-  bool needCheck = true;
-  final StringCallback addPackage;
-  final StringCallback removePackage;
-  WarehousePackageWidget(
-      {Key? key,
-      required this.addPackage,
-      required this.needCheck,
-      required this.removePackage,
-      required this.tracking_number,
-      this.details})
-      : super(key: key);
+  SavaPackageWidget({Key? key, this.details}) : super(key: key);
 
   @override
-  State<WarehousePackageWidget> createState() => _WarehousePackageWidgetState();
+  State<SavaPackageWidget> createState() => _SavaPackageWidgetState();
 }
 
-class _WarehousePackageWidgetState extends State<WarehousePackageWidget> {
+class _SavaPackageWidgetState extends State<SavaPackageWidget> {
   bool _value = false;
 
   @override
@@ -60,32 +47,13 @@ class _WarehousePackageWidgetState extends State<WarehousePackageWidget> {
                             color: Color.fromARGB(255, 40, 133, 210)),
                       ),
                     ),
-                    Container(
-                      child: widget.needCheck == true
-                          ? Checkbox(
-                              value: _value,
-                              onChanged: (value) {
-                                if (value!) {
-                                  widget.addPackage(
-                                      widget.details['tracking_number']);
-                                } else {
-                                  widget.removePackage(
-                                      widget.details['tracking_number']);
-                                }
-
-                                setState(() {
-                                  _value = value;
-                                });
-                              })
-                          : null,
-                    )
                   ],
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  this.widget.tracking_number,
+                  this.widget.details['sava_code'],
                   style: TextStyle(
                       fontSize: 25, color: Color.fromARGB(255, 115, 123, 130)),
                 ),
@@ -106,7 +74,7 @@ class _WarehousePackageWidgetState extends State<WarehousePackageWidget> {
                   children: [
                     Expanded(
                         child: Text(
-                      "En bodega de Miami",
+                      this.widget.details['status'],
                       style: TextStyle(
                           fontSize: 20,
                           color: Color.fromARGB(255, 80, 159, 222)),
@@ -115,13 +83,20 @@ class _WarehousePackageWidgetState extends State<WarehousePackageWidget> {
                       icon: Icon(Icons.keyboard_double_arrow_right),
                       color: Color.fromARGB(255, 15, 96, 162),
                       onPressed: () async {
+                        dynamic images = [];
+                        this.widget.details['WarehousePackages'].forEach((v) {
+                          images.addAll(v['Images']);
+                        });
                         await showTextDialog(context,
-                            images: widget.details['Images'],
-                            numeroRastreo: widget.details['tracking_number'],
-                            posicionActual: 'Bodega de Miami',
-                            peso: "${widget.details['pounds']} lb",
+                            images: images,
+                            numeroRastreo: widget.details['sava_code'],
+                            posicionActual: 'Viajando',
+                            peso: "${widget.details['wight']} lb",
                             precio: "${widget.details['price']}",
-                            fecha: widget.details['arrival_date']);
+                            fecha: widget.details['arrival_date_destiny'] ??
+                                "Sin fecha de llegada",
+                            fecha_salida: widget.details['departureDate'] ??
+                                "Sin fecha de salida");
                       },
                     )
                   ],
