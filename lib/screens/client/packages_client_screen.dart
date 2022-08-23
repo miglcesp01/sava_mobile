@@ -22,7 +22,6 @@ class _PackagesClientScreenState extends State<PackagesClientScreen> {
   void addPackage(String newId) {
     setState(() {
       packages.add(newId);
-      print(packages);
     });
   }
 
@@ -44,10 +43,7 @@ class _PackagesClientScreenState extends State<PackagesClientScreen> {
       dynamic response =
           await WarehousePackageProvider.getWarehousePackages(token!);
       packages_availables = response;
-      print(response);
       setState(() {});
-      print(packages_availables);
-      print(token);
     });
   }
 
@@ -94,11 +90,32 @@ class _PackagesClientScreenState extends State<PackagesClientScreen> {
                           ),
                         ),
                         GestureDetector(
-                          child: Icon(
-                            Icons.search,
-                          ),
-                          onTap: () {},
-                        )
+                          child: Icon(Icons.search),
+                          onTap: () {
+                            String texto = searchController.text;
+                            packages_availables = packages_availables
+                                .where((dynamic v) =>
+                                    v['tracking_number'].contains(texto)
+                                        ? true
+                                        : false)
+                                .toList();
+                            setState(() {});
+                          },
+                        ),
+                        searchController.text.isNotEmpty
+                            ? IconButton(
+                                padding: const EdgeInsets.all(0.0),
+                                onPressed: () async {
+                                  prefs = await SharedPreferences.getInstance();
+                                  String? token = prefs.getString('token');
+                                  packages_availables =
+                                      await WarehousePackageProvider
+                                          .getWarehousePackages(token!);
+                                  searchController.text = "";
+                                  setState(() {});
+                                },
+                                icon: Icon(Icons.close))
+                            : Container()
                       ]),
                     ),
                   )
