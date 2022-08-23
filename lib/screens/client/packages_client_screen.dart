@@ -51,6 +51,9 @@ class _PackagesClientScreenState extends State<PackagesClientScreen> {
     });
   }
 
+  //Search Controller
+  final TextEditingController searchController = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -83,9 +86,19 @@ class _PackagesClientScreenState extends State<PackagesClientScreen> {
                           )),
                       child: Row(children: [
                         Expanded(
-                          child: TextFormField(),
+                          child: TextFormField(
+                            controller: searchController,
+                            onSaved: (value) {
+                              searchController.text = value!;
+                            },
+                          ),
                         ),
-                        Icon(Icons.search)
+                        GestureDetector(
+                          child: Icon(
+                            Icons.search,
+                          ),
+                          onTap: () {},
+                        )
                       ]),
                     ),
                   )

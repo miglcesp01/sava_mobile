@@ -33,6 +33,9 @@ class _SavaPackagesClientScreenState extends State<SavaPackagesClientScreen> {
     });
   }
 
+  //search controller
+  final TextEditingController searchController = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -65,9 +68,39 @@ class _SavaPackagesClientScreenState extends State<SavaPackagesClientScreen> {
                           )),
                       child: Row(children: [
                         Expanded(
-                          child: TextFormField(),
+                          child: TextFormField(
+                            controller: searchController,
+                            onSaved: (String? value) {
+                              searchController.text = value!;
+                            },
+                          ),
                         ),
-                        Icon(Icons.search)
+                        GestureDetector(
+                          child: Icon(Icons.search),
+                          onTap: () {
+                            String texto = searchController.text;
+                            packages = packages
+                                .where((dynamic v) =>
+                                    v['sava_code'].contains(texto)
+                                        ? true
+                                        : false)
+                                .toList();
+                            setState(() {});
+                          },
+                        ),
+                        searchController.text.isNotEmpty
+                            ? IconButton(
+                                padding: const EdgeInsets.all(0.0),
+                                onPressed: () async {
+                                  prefs = await SharedPreferences.getInstance();
+                                  String? token = prefs.getString('token');
+                                  packages = await WarehousePackageProvider
+                                      .getSavaPackages(token!);
+                                  searchController.text = "";
+                                  setState(() {});
+                                },
+                                icon: Icon(Icons.close))
+                            : Container()
                       ]),
                     ),
                   )
@@ -83,7 +116,7 @@ class _SavaPackagesClientScreenState extends State<SavaPackagesClientScreen> {
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
             itemCount: packages.length,
-            itemBuilder: (context, index) {
+            itemBuilder: (BuildContext context, int index) {
               return SavaPackageWidget(details: packages[index]);
             })
       ]),
