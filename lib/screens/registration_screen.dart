@@ -86,17 +86,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         ));
 
     // address field
-    final addressField = TextFormField(
+    final phoneField = TextFormField(
         autofocus: false,
+        keyboardType: TextInputType.number,
         controller: addressEditingController,
         onSaved: (value) {
           addressEditingController.text = value!;
         },
         textInputAction: TextInputAction.next,
         decoration: InputDecoration(
-          prefixIcon: Icon(Icons.vpn_key),
+          prefixIcon: Icon(Icons.phone),
           contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-          hintText: "Dirección",
+          hintText: "Teléfono",
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -138,7 +139,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           onPressed: () async {
             String correo = emailEditingController.text;
             String password = passwordEditingController.text;
-            String address = addressEditingController.text;
+            String phone = addressEditingController.text;
             String confirmPassword = confirmPasswordEditingController.text;
 
             if (password != confirmPassword) {
@@ -146,7 +147,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   content: Text('Las contraseñas ingresadas no coinciden')));
             } else {
               var response =
-                  await UserProvider.createUser(address, correo, password);
+                  await UserProvider.createUser(phone, correo, password);
               if (response['status'] == 200) {
                 Navigator.popAndPushNamed(context, "login");
               } else if (response['status'] == 400 ||
@@ -194,7 +195,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     SizedBox(height: 45),
                     emailField,
                     SizedBox(height: 20),
-                    addressField,
+                    phoneField,
                     SizedBox(height: 20),
                     passwordField,
                     SizedBox(height: 20),

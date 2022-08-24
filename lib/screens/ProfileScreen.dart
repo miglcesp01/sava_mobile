@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:sava_mobile/widgets/text_dialog_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/dosage_model.dart';
 import '../utils/create_cell.dart';
@@ -16,6 +17,23 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class ProfileScreenState extends State<ProfileScreen> {
+  late String correo = "";
+
+  //Shared Preferences
+  late SharedPreferences prefs;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.delayed(Duration.zero, () async {
+      prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
+      correo = prefs.getString('email')!;
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -42,7 +60,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                     borderRadius: BorderRadius.all(Radius.circular(3))),
                 constraints: BoxConstraints(
                     maxWidth: MediaQuery.of(context).size.width * 0.6),
-                child: Text("miguel@espol.edu.ec",
+                child: Text(correo,
                     style: TextStyle(fontSize: 20),
                     overflow: TextOverflow.ellipsis),
               )

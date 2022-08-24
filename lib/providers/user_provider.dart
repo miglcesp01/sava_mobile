@@ -23,14 +23,15 @@ class UserProvider {
     return jsonDecoded;
   }
 
-  static createUser(String address, String correo, String password) async {
+  static createUser(String phone, String correo, String password) async {
     const String segment = '/users/client';
     var url = Uri.http(_baseUrl, segment);
-    final body = {"correo": correo, "direccion": address, "password": password};
+    final body = {"correo": correo, "telefono": phone, "password": password};
     final jsonString = json.encode(body);
     final response = await http.post(url,
         headers: {'Content-Type': 'application/json'}, body: jsonString);
     final jsonDecoded = json.decode(response.body);
+    jsonDecoded['status'] = response.statusCode;
     return jsonDecoded;
   }
 }
