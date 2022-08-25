@@ -15,6 +15,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   // string for displaying the error Message
   String? errorMessage;
 
+  //loading
+  bool _isLoading = false;
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
   // our form key
   final _formKey = GlobalKey<FormState>();
   // editing Controller
@@ -146,8 +156,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Text('Las contraseñas ingresadas no coinciden')));
             } else {
+              setState(() {
+                _isLoading = true;
+              });
+              await Future.delayed(const Duration(milliseconds: 500));
               var response =
                   await UserProvider.createUser(phone, correo, password);
+              setState(() {
+                _isLoading = false;
+              });
               if (response['status'] == 200) {
                 Navigator.popAndPushNamed(context, "login");
               } else if (response['status'] == 400 ||
@@ -160,12 +177,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               }
             }
           },
-          child: Text(
-            "Registrarse",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
-          )),
+          child: _isLoading
+              ? CircularProgressIndicator()
+              : Text(
+                  "Registrarse",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold),
+                )),
     );
 
     return Scaffold(

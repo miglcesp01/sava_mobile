@@ -15,12 +15,22 @@ class _LoginScreenState extends State<LoginScreen> {
   // form key
   final _formKey = GlobalKey<FormState>();
 
+  //loading
+  bool _isLoading = false;
+
   // editing controller
   final TextEditingController emailController = new TextEditingController();
   final TextEditingController passwordController = new TextEditingController();
 
   // string for displaying the error Message
   String? errorMessage;
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +86,14 @@ class _LoginScreenState extends State<LoginScreen> {
           onPressed: () async {
             String correo = emailController.text;
             String password = passwordController.text;
+            setState(() {
+              _isLoading = true;
+            });
+            await Future.delayed(const Duration(milliseconds: 500));
             var response = await UserProvider.loginUser(correo, password);
+            setState(() {
+              _isLoading = false;
+            });
             if (response['status'] == 200) {
               SharedPreferences prefs = await SharedPreferences.getInstance();
               prefs.setString("token", response['payload']['token']);
@@ -90,12 +107,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SnackBar(content: Text('Error interno del servidor')));
             }
           },
-          child: Text(
-            "Iniciar Sesión",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
-          )),
+          child: _isLoading
+              ? CircularProgressIndicator()
+              : Text(
+                  "Iniciar Sesión",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold),
+                )),
     );
 
     return Scaffold(

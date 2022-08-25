@@ -18,18 +18,33 @@ class SavaPackagesClientScreen extends StatefulWidget {
 class _SavaPackagesClientScreenState extends State<SavaPackagesClientScreen> {
   dynamic packages = [];
 
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  //loading
+  bool _isLoading = false;
+
   //Shared Preferences
   late SharedPreferences prefs;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () async {
+    setState(() {
+      _isLoading = true;
+    });
+    Future.delayed(Duration(milliseconds: 500), () async {
       prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('token');
       dynamic response = await WarehousePackageProvider.getSavaPackages(token!);
       packages = response;
-      setState(() {});
+      setState(() {
+        _isLoading = false;
+      });
     });
   }
 
@@ -112,13 +127,28 @@ class _SavaPackagesClientScreenState extends State<SavaPackagesClientScreen> {
           style:
               TextStyle(fontSize: 30, color: Color.fromARGB(255, 22, 102, 168)),
         ),
-        ListView.builder(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            itemCount: packages.length,
-            itemBuilder: (BuildContext context, int index) {
-              return SavaPackageWidget(details: packages[index]);
-            })
+        _isLoading
+            ? CircularProgressIndicator()
+            : packages.length == 0
+                ? Column(
+                    children: const [
+                      ImageIcon(
+                        AssetImage("assets/entrega-rapida.png"),
+                        size: 200,
+                      ),
+                      Text(
+                        "No se encontraron paquetes",
+                        style: TextStyle(fontSize: 30),
+                      )
+                    ],
+                  )
+                : ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: packages.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return SavaPackageWidget(details: packages[index]);
+                    })
       ]),
     );
   }
