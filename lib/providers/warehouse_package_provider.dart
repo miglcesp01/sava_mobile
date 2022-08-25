@@ -8,7 +8,7 @@ class WarehousePackageProvider {
 
   static getWarehousePackages(String token) async {
     const String segment = '/api/warehouse-packages/user';
-    var url = Uri.http(_baseUrl, segment);
+    var url = Uri.https(_baseUrl, segment);
     final response = await http.get(url,
         headers: {'Content-Type': 'application/json', 'Authorization': token});
     final jsonDecoded = json.decode(response.body);
@@ -17,7 +17,7 @@ class WarehousePackageProvider {
 
   static getSavaPackages(String token) async {
     const String segment = '/savaPackage/';
-    var url = Uri.http(_baseUrl, segment);
+    var url = Uri.https(_baseUrl, segment);
     final response = await http.get(url,
         headers: {'Content-Type': 'application/json', 'Authorization': token});
     final jsonDecoded = json.decode(response.body);
@@ -26,7 +26,7 @@ class WarehousePackageProvider {
 
   static createSavaPackages(packages) async {
     const String segment = "/api/warehouse/sava";
-    var url = Uri.http(_baseUrl, segment);
+    var url = Uri.https(_baseUrl, segment);
     final body = {"packages": packages};
     final jsonString = json.encode(body);
     final response = await http.post(url,
