@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sized_box_for_whitespace, always_specify_types, unused_import, non_constant_identifier_names
 
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sava_mobile/models/dosage_model.dart';
 import 'package:sava_mobile/providers/warehouse_package_provider.dart';
@@ -10,6 +9,7 @@ import 'package:sava_mobile/screens/client/sava_packages_client_screen.dart';
 import 'package:sava_mobile/widgets/warehouse_package_widget.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:io' show Platform;
 
 import '../../utils/create_cell.dart';
 import '../screens.dart';
@@ -54,19 +54,21 @@ class _HomeClientScreenState extends State<HomeClientScreen> {
       child: null,
     ),
     actions: [
-      Container(
-        margin: const EdgeInsets.only(right: 10),
-        child: GestureDetector(
-          onTap: () async {
-            await SystemChannels.platform
-                .invokeMethod('SystemNavigator.pop', true);
-          },
-          child: const CircleAvatar(
-            backgroundColor: Colors.white,
-            child: Icon(Icons.logout_rounded),
-          ),
-        ),
-      )
+      Platform.isAndroid
+          ? Container(
+              margin: const EdgeInsets.only(right: 10),
+              child: GestureDetector(
+                onTap: () async {
+                  await SystemChannels.platform
+                      .invokeMethod('SystemNavigator.pop', true);
+                },
+                child: const CircleAvatar(
+                  backgroundColor: Colors.white,
+                  child: Icon(Icons.logout_rounded),
+                ),
+              ),
+            )
+          : Container()
     ],
   );
 

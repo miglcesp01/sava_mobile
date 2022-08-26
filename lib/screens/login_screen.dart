@@ -36,6 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     //email field
     final emailField = TextFormField(
+        key: Key('emailTextFormField'),
         autofocus: false,
         controller: emailController,
         keyboardType: TextInputType.emailAddress,
@@ -60,6 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     //password field
     final passwordField = TextFormField(
+        key: Key("passwordTextFormField"),
         autofocus: false,
         controller: passwordController,
         obscureText: true,
@@ -97,6 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
             if (response['status'] == 200) {
               SharedPreferences prefs = await SharedPreferences.getInstance();
               prefs.setString("token", response['payload']['token']);
+              prefs.setString("phone", response['payload']['phone']);
               prefs.setString("email", correo);
               Navigator.popAndPushNamed(context, "home_client");
             } else if (response['status'] == 400 || response['status'] == 401) {

@@ -18,6 +18,7 @@ class ProfileScreen extends StatefulWidget {
 
 class ProfileScreenState extends State<ProfileScreen> {
   late String correo = "";
+  late String phone = "";
 
   //Shared Preferences
   late SharedPreferences prefs;
@@ -29,6 +30,7 @@ class ProfileScreenState extends State<ProfileScreen> {
     Future.delayed(Duration.zero, () async {
       prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('token');
+      phone = prefs.getString('phone')!;
       correo = prefs.getString('email')!;
       setState(() {});
     });
@@ -52,17 +54,19 @@ class ProfileScreenState extends State<ProfileScreen> {
               Container(
                   constraints: BoxConstraints(
                       maxWidth: MediaQuery.of(context).size.width * 0.4),
-                  child: Text('Correo: ', style: TextStyle(fontSize: 20))),
+                  child: Text('Correo: ',
+                      maxLines: 2, style: TextStyle(fontSize: 20))),
               Container(
-                alignment: Alignment.center,
+                alignment: Alignment.centerLeft,
                 decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
                     borderRadius: BorderRadius.all(Radius.circular(3))),
                 constraints: BoxConstraints(
                     maxWidth: MediaQuery.of(context).size.width * 0.6),
                 child: Text(correo,
-                    style: TextStyle(fontSize: 20),
-                    overflow: TextOverflow.ellipsis),
+                    maxLines: 2,
+                    style: TextStyle(fontSize: 18),
+                    overflow: TextOverflow.visible),
               )
             ]),
             SizedBox(height: 20),
@@ -70,7 +74,9 @@ class ProfileScreenState extends State<ProfileScreen> {
               Container(
                   constraints: BoxConstraints(
                       maxWidth: MediaQuery.of(context).size.width * 0.4),
-                  child: Text('Teléfono: ', style: TextStyle(fontSize: 20))),
+                  child: Text('Teléfono: ',
+                      overflow: TextOverflow.visible,
+                      style: TextStyle(fontSize: 20))),
               Container(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
@@ -78,8 +84,8 @@ class ProfileScreenState extends State<ProfileScreen> {
                     borderRadius: BorderRadius.all(Radius.circular(3))),
                 constraints: BoxConstraints(
                     maxWidth: MediaQuery.of(context).size.width * 0.6),
-                child: Text("098987674",
-                    style: TextStyle(fontSize: 20),
+                child: Text(phone,
+                    style: TextStyle(fontSize: 18),
                     overflow: TextOverflow.ellipsis),
               )
             ]),

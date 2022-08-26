@@ -9,57 +9,51 @@
 
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:http_mock_adapter/http_mock_adapter.dart';
 
 import 'package:sava_mobile/main.dart';
+import 'package:sava_mobile/providers/user_provider.dart';
+import 'package:sava_mobile/providers/warehouse_package_provider.dart';
 import 'package:sava_mobile/screens/screens.dart';
 import 'package:sava_mobile/widgets/widgets.dart';
+import 'dart:math';
 
 void main() {
-  testWidgets("Login button trigger home screen", (WidgetTester tester) async {
-    await tester.pumpWidget(const SavaExpressApp());
-    // Verify that our counter starts at 0.
-    expect(find.text('Usuario'), findsOneWidget);
-    expect(find.text('Contraseña'), findsOneWidget);
+  test("Login return status 200 when client exists", () async {
+    final login =
+        await UserProvider.loginUser("cmeneses@espol.edu.ec", "Carlos");
 
-    // Tap the login button
-    await tester.tap(find.text("Iniciar Sesión"));
-    await tester.pump();
-
-    expect(find.byIcon(Icons.search), findsOneWidget);
-    expect(find.text('Ingrese su código'), findsOneWidget);
-    expect(find.text('Historial'), findsOneWidget);
-    expect(find.byType(WarehousePackageWidget), findsWidgets);
+    expect(login['status'], 200);
   });
 
-  testWidgets("Home Screen trigger Historial Screen",
-      (WidgetTester tester) async {
-    await tester.pumpWidget(const SavaExpressApp());
-    await tester.tap(find.text("Iniciar Sesión"));
-    await tester.pump();
-    await tester.tap(find.text("Historial"));
-    await tester.pump();
+  test("Register return status 200 and right message", () async {
+    var rng = Random();
+    final String mail = "miguel${rng.nextInt(1000000)}@espol";
+    final register =
+        await UserProvider.createUser("034234234", mail, "miguel@espol");
 
-    expect(find.byIcon(Icons.search), findsOneWidget);
-    expect(find.text('Ingrese su código'), findsOneWidget);
-    expect(find.text('Historial'), findsOneWidget);
-    expect(find.byType(WarehousePackageWidget), findsWidgets);
+    expect(register['status'], 200);
+    expect(register['message'], "Creacion completa");
   });
 
-  testWidgets("Home Screen trigger Historial Screen",
-      (WidgetTester tester) async {
-    await tester.pumpWidget(const SavaExpressApp());
-    await tester.tap(find.text("Iniciar Sesión"));
-    await tester.pump();
-    await tester.tap(find.text("Historial"));
-    await tester.pump();
+  test("Obtencion de paquetes exitosa", () async {
+    final login =
+        await UserProvider.loginUser("cmeneses@espol.edu.ec", "Carlos");
+    final token = login['payload']['token'];
 
-    expect(find.byIcon(Icons.search), findsOneWidget);
-    expect(find.text('Ingrese su código'), findsOneWidget);
-    expect(find.text('Historial'), findsOneWidget);
-    expect(find.byType(WarehousePackageWidget), findsWidgets);
+    final paquetes = await WarehousePackageProvider.getSavaPackages(token);
+    print(paquetes.runtimeType);
+    expect(paquetes.runtimeType, List<dynamic>);
+  });
+
+  test("Obtener paquetes en bodega", () async {
+    final login =
+        await UserProvider.loginUser("cmeneses@espol.edu.ec", "Carlos");
+    final token = login['payload']['token'];
+
+    final paquetes = await WarehousePackageProvider.getWarehousePackages(token);
+    print(paquetes.runtimeType);
+    expect(paquetes.runtimeType, List<dynamic>);
   });
 }
